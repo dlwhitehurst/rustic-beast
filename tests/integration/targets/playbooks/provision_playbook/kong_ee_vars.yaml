@@ -1,0 +1,98 @@
+---
+all:
+  vars:
+    kubernetes_cluster:
+      cloud_provider: 'aws'
+      master_count: 3
+      master_instance_type: 't2.large'
+      master_azs: 'us-east-1a,us-east-1b'
+      worker_count: 2
+      worker_instance_type: 't2.xlarge'
+      worker_azs: 'us-east-1a,us-east-1b'
+      dns_zone: "{{ cluster_fqdn }}"
+      keycloak:
+        client_secret: 'placeholder17'
+        realm: prod
+    kops:
+      enabled: false
+    kong:
+      default_ingress_class: 'prod'
+      ee_creds:
+        - name: default
+          license: '{"license":{"version":1,"signature":"placeholder1","payload":{"customer":"example.com","license_creation_date":"2020-4-6","product_subscription":"Kong Enterprise Edition","support_plan":"None","admin_seats":"5","license_expiration_date":"2021-04-07","license_key":"placeholder2"}}}'
+          image_registry:
+            username: 'placeholder3@kong'
+            password: 'placeholder4'
+      instances:
+      - name: 'sandbox-kong'
+        hybrid: false
+        ingress_class: 'sandbox'
+        pg:
+          password: placeholder1
+        ee:
+          enabled: true
+          creds: 'default'
+          keycloak:
+            realm: 'sandbox'
+            client_secret: 'placeholder14'
+          admin_password: 'placeholder10'
+      - name: 'prod-kong'
+        hybrid: true
+        ingress_class: 'prod'
+        pg:
+          password: placeholder2
+        ee:
+          enabled: true
+          creds: 'default'
+          keycloak:
+            realm: 'prod'
+            client_secret: 'placeholder12'
+          admin_password: 'placeholder13'
+    kuma:
+      enabled: false
+      meshes: []
+    namespaces: []
+    keycloak:
+      enabled: true
+      pg:
+        password: placeholder5
+      realms:
+      - name: sandbox
+        admin_password: placeholder6
+      - name: prod
+        admin_password: placeholder7
+    postgresql:
+      password: placeholder8
+      postgres_password: placeholder9
+    cert_manager:
+      enabled: false
+    gitea:
+      enabled: false
+      pg:
+        password: placeholder10
+      keycloak:
+        realm: 'prod'
+    nexus:
+      enabled: false
+      keycloak:
+        realm: 'prod'
+        client_secret: placeholder16
+    elastic_cloud:
+      enabled: true
+      elastic_secret: placeholder11
+      ee:
+        enabled: true
+        trial: true
+        keycloak:
+          realm: 'prod'
+          client_secret: placeholder15
+        license: "{}"
+    jaeger:
+      enabled: false
+      keycloak:
+        realm: 'prod'
+    jenkins:
+      enabled: false
+      keycloak:
+        realm: 'prod'
+    flux: {}
